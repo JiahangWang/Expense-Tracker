@@ -23,7 +23,7 @@ The Expense Tracker is a Python application that allows users to record and mana
 - GitHub  
 
 ---
-
+```
 ## 📁 Project Structure
 expense_tracker_project/
 │
@@ -39,6 +39,7 @@ expense_tracker_project/
 ├── test_tracker.py # Unit tests (pytest)
 │
 └── README.md # Project documentation
+```
 ---
 
 ## ▶️ How to Run

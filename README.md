@@ -50,8 +50,7 @@ expense_tracker_project/
 ---
 ## 🧪 Testing
 
-To run tests:
-pytest test_tracker.py
+To run tests: ```pytest test_tracker.py```
 ---
 ## 📊 Example Data Format (data.csv)
 

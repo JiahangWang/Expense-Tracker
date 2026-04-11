@@ -43,19 +43,23 @@ expense_tracker_project/
 ---
 
 ## ▶️ How to Run
+
 1. Make sure Python 3.12 is installed
 2. Install required libraries: ```pip install pandas```
 3. Run the program:
 ---
 ## 🧪 Testing
+
 To run tests:
 pytest test_tracker.py
 ---
 ## 📊 Example Data Format (data.csv)
+
 amount,date,category,type
 50,2026-04-01,Food,Expense
 1000,2026-04-01,Salary,Income
 ---
+
 ## 📝 Notes
 - The application uses a simple GUI built with tkinter.
 - Data is stored locally in a CSV file.

@@ -5,7 +5,7 @@ Expense Tracker is a Python desktop app for recording and analyzing personal inc
 It provides a Tkinter GUI, stores data in CSV, and supports category-based summaries and charts.
 
 ## Features
-- Add Income and Expense transactions with a 2-step entry flow
+- Add Income and Expense transactions
 - Track ID, amount, date, and category
 - Delete a transaction by ID
 - Show current balance

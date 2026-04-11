@@ -5,17 +5,19 @@ Expense Tracker is a Python desktop app for recording and analyzing personal inc
 It provides a Tkinter GUI, stores data in CSV, and supports category-based summaries and charts.
 
 ## Features
-- Add Income and Expense transactions
-- Track amount, date, and category
+- Add Income and Expense transactions with a 2-step entry flow
+- Track ID, amount, date, and category
+- Delete a transaction by ID
 - Show current balance
 - Show transactions filtered by Type + Year + Month
+- Show daily records filtered by Type + Year + Month + Day
 - Show category summary filtered by Type + Year + Month
 - Show category visuals with:
   - Category bar chart
   - Category pie chart
 - Show cashflow trend with:
-  - Year Trend
-  - Month Trend
+  - Year Trend across all available years
+  - Month Trend for one selected year
 - Persist data to data/data.csv
 
 ## Tech Stack
@@ -63,12 +65,7 @@ python main.py
 `data/data.csv` uses this format:
 
 ```csv
-amount,date,category,type
-50,2026-04-01,food,Expense
-1000,2026-04-01,salary,Income
+id,amount,date,category,type
+1,50,2026-04-01,food,Expense
+2,1000,2026-04-01,salary,Income
 ```
-
-## Notes
-- Date format is expected as YYYY-MM-DD.
-- The app reads existing transactions from `data/data.csv` on startup.
-- After adding a transaction, data is saved immediately to `data/data.csv`.

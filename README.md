@@ -13,6 +13,7 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 - Visualize category totals with:
   - Bar chart
   - Pie chart
+- Show monthly cashflow trend with a line chart
 - Persist data to data/data.csv
 
 ## Tech Stack

@@ -53,10 +53,11 @@ expense_tracker_project/
 To run tests: ```pytest test_tracker.py```
 ---
 ## 📊 Example Data Format (data.csv)
-
+```
 amount,date,category,type
 50,2026-04-01,Food,Expense
 1000,2026-04-01,Salary,Income
+```
 ---
 
 ## 📝 Notes

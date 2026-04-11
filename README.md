@@ -25,21 +25,21 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 ## Project Structure
 ```text
 tracker/
-|-- main.py               # Thin application entrypoint
-|-- README.md             # Project documentation
+|-- main.py               # App entry
+|-- README.md             # Docs
 |-- .gitignore
 |-- config/
-|   `-- app_config.py     # Shared constants and file paths
+|   `-- app_config.py     # Constants
 |-- core/
-|   |-- analytics.py      # Data analysis helpers
-|   |-- charts.py         # Matplotlib figure builders
-|   |-- file_handler.py   # CSV save/load functions
-|   |-- tracker.py        # Core tracker logic
-|   `-- transaction.py    # Transaction / Expense / Income classes
+|   |-- analytics.py      # Analysis
+|   |-- charts.py         # Charts
+|   |-- file_handler.py   # CSV I/O
+|   |-- tracker.py        # Tracker logic
+|   `-- transaction.py    # Transaction models
 |-- data/
-|   `-- data.csv          # Local transaction dataset
+|   `-- data.csv          # Sample data
 `-- ui/
-    `-- main_window.py    # Tkinter GUI and interaction flow
+    `-- main_window.py    # Tkinter UI
 ```
 
 ## Requirements

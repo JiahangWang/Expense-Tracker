@@ -9,8 +9,7 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 - Track ID, amount, date, and category
 - Delete a transaction by ID
 - Show current balance
-- Show transactions filtered by Type + Year + Month
-- Show daily records filtered by Type + Year + Month + Day
+- Show transaction records filtered by Type + Year + Month + optional Day
 - Show category summary filtered by Type + Year + Month
 - Show category visuals with:
   - Category bar chart

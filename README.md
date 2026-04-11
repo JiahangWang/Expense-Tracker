@@ -10,10 +10,12 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 - Show current balance
 - Show transactions filtered by Type + Year + Month
 - Show category summary filtered by Type + Year + Month
-- Visualize category totals with:
-  - Bar chart
-  - Pie chart
-- Show monthly cashflow trend with a line chart
+- Show category visuals with:
+  - Category bar chart
+  - Category pie chart
+- Show cashflow trend with:
+  - Year Trend
+  - Month Trend
 - Persist data to data/data.csv
 
 ## Tech Stack
@@ -70,3 +72,4 @@ amount,date,category,type
 - Date format is expected as YYYY-MM-DD.
 - The app reads existing transactions from `data/data.csv` on startup.
 - After adding a transaction, data is saved immediately to `data/data.csv`.
+- The `Trend` feature first asks you to choose `Year Trend` or `Month Trend`.

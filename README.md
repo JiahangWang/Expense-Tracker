@@ -26,25 +26,7 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 - matplotlib (charts)
 - CSV file storage
 
-## Project Structure
-```text
-tracker/
-|-- main.py               # App entry
-|-- README.md             # Docs
-|-- .gitignore
-|-- config/
-|   `-- app_config.py     # Constants
-|-- core/
-|   |-- analytics.py      # Analysis
-|   |-- charts.py         # Charts
-|   |-- file_handler.py   # CSV I/O
-|   |-- tracker.py        # Tracker logic
-|   `-- transaction.py    # Transaction models
-|-- data/
-|   `-- data.csv          # Sample data
-`-- ui/
-    `-- main_window.py    # Tkinter UI
-```
+
 
 ## Requirements
 Install dependencies:

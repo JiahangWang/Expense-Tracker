@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 
 class User:
@@ -22,6 +23,10 @@ class User:
     @property
     def data_path(self) -> str:
         return os.path.join("data", self._username, "data.csv")
+
+    @property
+    def data_file(self) -> Path:
+        return Path(self.data_path)
 
     def to_dict(self) -> dict:
         return {

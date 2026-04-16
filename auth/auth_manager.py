@@ -1,3 +1,8 @@
+# Description:
+# This file implements the authentication manager for the Expense Tracker.
+# It supports registration, login, default-user setup, and account deletion
+# while storing hashed passwords in a JSON file.
+
 import hashlib
 import json
 import secrets

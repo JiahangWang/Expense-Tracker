@@ -51,3 +51,19 @@ id,amount,date,category,type
 1,50,2026-04-01,food,Expense
 2,1000,2026-04-01,salary,Income
 ```
+
+### JSON Format
+User account data uses this format:
+
+```json
+{
+  "alice": {
+    "password_hash": "hashed_password_value",
+    "salt": "random_salt_value"
+  },
+  "bob": {
+    "password_hash": "hashed_password_value",
+    "salt": "random_salt_value"
+  }
+}
+```

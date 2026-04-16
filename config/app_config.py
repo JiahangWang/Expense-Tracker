@@ -1,3 +1,8 @@
+# Description:
+# This file stores shared configuration values for the Expense Tracker.
+# It defines project paths, default login data, and fixed category/type options
+# used throughout the application.
+
 from pathlib import Path
 
 

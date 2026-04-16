@@ -2,5 +2,9 @@
     "bob": {
         "password_hash": "6de63de175111a23b45b1d1d76beee60586dec071ab755fab420673b4781c2a8",
         "salt": "5a9921b5ccfeeda7d7071ca68329d8a6"
+    },
+    "perfect": {
+        "password_hash": "adb05696a2ae015340e7a8a37f2e6862f0d551a1b13735fb6fce5d8fdbc113a3",
+        "salt": "54a62ad32940f19d7e872c18725e6473"
     }
 }

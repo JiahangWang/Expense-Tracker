@@ -1,6 +1,7 @@
 # Description:
-# This file contains shared validation and formatting helpers for the GUI.
-# It keeps reporting and transaction-input logic separate from the Tkinter layer.
+# This file contains shared validation and formatting helpers for transactions.
+# It keeps transaction-input and transaction-display logic separate from the
+# Tkinter layer.
 
 from datetime import datetime
 

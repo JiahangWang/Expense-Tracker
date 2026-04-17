@@ -1,6 +1,7 @@
 import tkinter as tk
 from ui.dashboard_view import build_dashboard
 from ui.transactions_view import build_transactions
+from ui.analytics_view import build_analytics
 
 
 class AppWindow(tk.Tk):
@@ -15,6 +16,7 @@ class AppWindow(tk.Tk):
         self._build()
         self.register_view("Dashboard", build_dashboard(self._content, user))
         self.register_view("Transactions", build_transactions(self._content, user))
+        self.register_view("Analytics", build_analytics(self._content, user))
         self._center()
         self.show_view("Dashboard")
 

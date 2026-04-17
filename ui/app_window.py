@@ -1,4 +1,5 @@
 import tkinter as tk
+from ui.dashboard_view import build_dashboard
 
 
 class AppWindow(tk.Tk):
@@ -11,6 +12,7 @@ class AppWindow(tk.Tk):
         self._views = {}
         self._active_btn = None
         self._build()
+        self.register_view("Dashboard", build_dashboard(self._content, user))
         self._center()
         self.show_view("Dashboard")
 

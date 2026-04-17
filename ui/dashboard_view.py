@@ -15,7 +15,7 @@ def build_dashboard(parent, user):
 
     frame = tk.Frame(parent, bg="#f1f5f9")
 
-    tk.Label(frame, text="Dashboard", font=("Helvetica", 16, "bold"),
+    tk.Label(frame, text=f"Welcome, {user.username.capitalize()} 👋", font=("Helvetica", 16, "bold"),
              bg="#f1f5f9", fg="#1e293b").pack(anchor="w", padx=30, pady=(28, 20))
 
     cards_frame = tk.Frame(frame, bg="#f1f5f9")

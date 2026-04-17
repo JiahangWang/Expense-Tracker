@@ -6,5 +6,9 @@
     "perfect": {
         "password_hash": "adb05696a2ae015340e7a8a37f2e6862f0d551a1b13735fb6fce5d8fdbc113a3",
         "salt": "54a62ad32940f19d7e872c18725e6473"
+    },
+    "naku": {
+        "password_hash": "90e266bb6a76c1536d240b0d59affc453a22e66860f56e02cb118c72ee2b7b88",
+        "salt": "3d1713174710add743220546b8d2d1c6"
     }
 }

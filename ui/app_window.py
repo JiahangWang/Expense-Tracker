@@ -1,5 +1,6 @@
 import tkinter as tk
 from ui.dashboard_view import build_dashboard
+from ui.transactions_view import build_transactions
 
 
 class AppWindow(tk.Tk):
@@ -13,6 +14,7 @@ class AppWindow(tk.Tk):
         self._active_btn = None
         self._build()
         self.register_view("Dashboard", build_dashboard(self._content, user))
+        self.register_view("Transactions", build_transactions(self._content, user))
         self._center()
         self.show_view("Dashboard")
 
@@ -58,7 +60,10 @@ class AppWindow(tk.Tk):
     def show_view(self, name):
         for frame in self._views.values():
             frame.place_forget()
-        self._views[name].place(relx=0, rely=0, relwidth=1, relheight=1)
+        frame = self._views[name]
+        frame.place(relx=0, rely=0, relwidth=1, relheight=1)
+        if hasattr(frame, "refresh"):
+            frame.refresh()
 
         if self._active_btn:
             self._active_btn.config(bg="#1e293b", fg="#94a3b8")

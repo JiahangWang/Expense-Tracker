@@ -9,20 +9,15 @@ from core.transaction_helper import (
 )
 
 
-VALID_TYPES = ("Expense", "Income")
-EXPENSE_CATEGORIES = ("food", "transport")
-INCOME_CATEGORIES = ("salary", "bonus")
-
-
 class TestValidateTransactionInput:
-    def test_returns_normalized_values_for_valid_input(self):
+    def test_returns_normalized_values_for_valid_input(self, valid_types, expense_categories):
         result = validate_transaction_input(
             "12.50",
             "2026-04-18",
             "food",
             "Expense",
-            VALID_TYPES,
-            EXPENSE_CATEGORIES,
+            valid_types,
+            expense_categories,
         )
 
         assert result == (12.5, "2026-04-18", "food", "Expense")
@@ -38,15 +33,24 @@ class TestValidateTransactionInput:
             ("12", "04/18/2026", "food", "Expense", "YYYY-MM-DD"),
         ],
     )
-    def test_rejects_invalid_input(self, amount_raw, date_text, category, transaction_type, message):
+    def test_rejects_invalid_input(
+        self,
+        amount_raw,
+        date_text,
+        category,
+        transaction_type,
+        message,
+        valid_types,
+        expense_categories,
+    ):
         with pytest.raises(ValueError, match=message):
             validate_transaction_input(
                 amount_raw,
                 date_text,
                 category,
                 transaction_type,
-                VALID_TYPES,
-                EXPENSE_CATEGORIES,
+                valid_types,
+                expense_categories,
             )
 
 
@@ -65,7 +69,7 @@ class TestPeriodHelpers:
 
 
 class TestBuildAndFormatRows:
-    def test_build_transaction_rows_filters_and_sorts_rows(self):
+    def test_build_transaction_rows_filters_and_sorts_rows(self, april_expense_rows):
         transactions = [
             Expense(3, 50, "2026-04-19", "food"),
             Expense(1, 20, "2026-04-18", "transport"),
@@ -75,10 +79,7 @@ class TestBuildAndFormatRows:
 
         rows = build_transaction_rows(transactions, "Expense", "2026", "04", "All")
 
-        assert rows == [
-            {"id": 1, "date": "2026-04-18", "category": "transport", "amount": 20, "type": "Expense"},
-            {"id": 3, "date": "2026-04-19", "category": "food", "amount": 50, "type": "Expense"},
-        ]
+        assert rows == april_expense_rows
 
     def test_format_transaction_lines_builds_fixed_width_output(self):
         output = format_transaction_lines(
@@ -90,4 +91,3 @@ class TestBuildAndFormatRows:
         assert "food" in output
         assert "12.50" in output
         assert "Expense" in output
-

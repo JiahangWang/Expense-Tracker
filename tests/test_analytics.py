@@ -7,22 +7,11 @@ from core.analytics import (
     monthly_cashflow_summary,
     yearly_cashflow_summary,
 )
-from core.transaction import Expense, Income
-
-
-def sample_transactions():
-    return [
-        Income(1, 3000, "2026-04-01", "salary"),
-        Expense(2, 50, "2026-04-02", "food"),
-        Expense(3, 25, "2026-04-02", "transport"),
-        Income(4, 200, "2026-05-01", "bonus"),
-        Expense(5, 100, "2025-12-15", "food"),
-    ]
 
 
 class TestLoadAndFilterData:
-    def test_load_data_builds_dataframe_from_transactions(self, monkeypatch):
-        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions())
+    def test_load_data_builds_dataframe_from_transactions(self, monkeypatch, sample_transactions):
+        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions)
 
         df = load_data("bob")
 
@@ -30,8 +19,8 @@ class TestLoadAndFilterData:
         assert len(df) == 5
         assert df.iloc[0]["category"] == "salary"
 
-    def test_filter_data_applies_type_and_date_filters(self, monkeypatch):
-        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions())
+    def test_filter_data_applies_type_and_date_filters(self, monkeypatch, sample_transactions):
+        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions)
 
         df = filter_data("bob", transaction_type="Expense", year="2026", month="04", day="02")
 
@@ -39,8 +28,8 @@ class TestLoadAndFilterData:
         assert set(df["category"]) == {"food", "transport"}
         assert pd.api.types.is_datetime64_any_dtype(df["date"])
 
-    def test_filter_data_returns_empty_dataframe_when_no_rows_match(self, monkeypatch):
-        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions())
+    def test_filter_data_returns_empty_dataframe_when_no_rows_match(self, monkeypatch, sample_transactions):
+        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions)
 
         df = filter_data("bob", transaction_type="Income", year="2024", month="01")
 
@@ -48,8 +37,8 @@ class TestLoadAndFilterData:
 
 
 class TestCategorySummary:
-    def test_category_summary_groups_amounts_by_category(self, monkeypatch):
-        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions())
+    def test_category_summary_groups_amounts_by_category(self, monkeypatch, sample_transactions):
+        monkeypatch.setattr("core.analytics.load_transactions", lambda user_ref: sample_transactions)
 
         summary = category_summary("bob", transaction_type="Expense", year="2026", month="04")
 
@@ -63,8 +52,8 @@ class TestCategorySummary:
 
 
 class TestCashflowSummaries:
-    def test_monthly_cashflow_summary_aggregates_by_month(self):
-        income, expense, net = monthly_cashflow_summary(sample_transactions(), 2026)
+    def test_monthly_cashflow_summary_aggregates_by_month(self, sample_transactions):
+        income, expense, net = monthly_cashflow_summary(sample_transactions, 2026)
 
         assert income[3] == 3000.0
         assert expense[3] == 75.0
@@ -73,8 +62,8 @@ class TestCashflowSummaries:
         assert expense[4] == 0.0
         assert net[4] == 200.0
 
-    def test_yearly_cashflow_summary_aggregates_across_years(self):
-        years, income, expense, net = yearly_cashflow_summary(sample_transactions())
+    def test_yearly_cashflow_summary_aggregates_across_years(self, sample_transactions):
+        years, income, expense, net = yearly_cashflow_summary(sample_transactions)
 
         assert years == [2025, 2026]
         assert income == [0.0, 3200.0]

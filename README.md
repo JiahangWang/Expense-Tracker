@@ -2,10 +2,11 @@
 
 ## Project Description
 Expense Tracker is a Python desktop app for recording and analyzing personal income and expenses.
-It provides a Tkinter GUI, stores data in CSV, and supports category-based summaries and charts.
+It provides a Tkinter GUI, stores users and transactions in MySQL, and supports category-based summaries, charts, and AI-generated insights.
 
 ## Features
-- Support user login and registration with per-user CSV data files
+- Support user login and registration
+- Store user accounts and transactions in MySQL
 - Add Income and Expense transactions
 - Track ID, amount, date, and category
 - Delete a transaction by ID
@@ -18,16 +19,18 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 - Show cashflow trend with:
   - Year Trend across all available years
   - Month Trend for one selected year
-- Persist data to data/data.csv
+- Generate AI insights from transaction history
+- Automatically import legacy `data/users.json` and per-user CSV files into MySQL when the database is empty
 
 ## Tech Stack
 - Python 3.x
 - tkinter (GUI)
+- MySQL
 - pandas (data analysis)
 - matplotlib (charts)
 - python-dotenv (load environment variables from `.env`)
 - google-generativeai (AI insights)
-- CSV file storage
+- mysql-connector-python (database driver)
 
 ## Requirements
 Install dependencies:
@@ -38,12 +41,20 @@ pip install -r requirements.txt
 
 Notes:
 - `tkinter` is part of the Python standard library in many distributions, but some systems may require installing Tk separately.
-- The AI insights feature requires a Gemini API key.
+- You need a running MySQL server before starting the app.
+- The app creates the target database and tables automatically if your MySQL account has permission.
 
+## Environment Setup
 Create a `.env` file in the project root:
 
 ```env
 GEMINI_API_KEY=your_api_key_here
+GEMINI_MODEL=gemini-2.5-flash
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_USER=root
+DB_PASSWORD=your_mysql_password
+DB_NAME=expense_tracker
 ```
 
 ## How to Run
@@ -55,27 +66,22 @@ python main.py
 
 If `python` points to a different interpreter on your machine, use the interpreter from your active environment instead.
 
-## CSV Format
-`data/data.csv` uses this format:
+## Database Schema
+The application creates these tables automatically:
 
-```csv
-id,amount,date,category,type
-1,50,2026-04-01,food,Expense
-2,1000,2026-04-01,salary,Income
-```
+### `users`
+- `id`
+- `username`
+- `password_hash`
+- `salt`
+- `created_at`
 
-### JSON Format
-User account data uses this format:
-
-```json
-{
-  "alice": {
-    "password_hash": "hashed_password_value",
-    "salt": "random_salt_value"
-  },
-  "bob": {
-    "password_hash": "hashed_password_value",
-    "salt": "random_salt_value"
-  }
-}
-```
+### `transactions`
+- `record_id`
+- `user_id`
+- `transaction_id`
+- `amount`
+- `transaction_date`
+- `category`
+- `transaction_type`
+- `created_at`

@@ -2,15 +2,12 @@ import tkinter as tk
 from tkinter import messagebox
 
 from auth.auth_manager import AuthManager
-from config.app_config import USERS_FILE
-
-
 class LoginWindow(tk.Tk):
     def __init__(self, on_login_success):
         super().__init__()
         self.title("Expense Tracker — Login")
         self.resizable(False, False)
-        self._auth = AuthManager(USERS_FILE)
+        self._auth = AuthManager()
         self._on_login_success = on_login_success
         self._build()
         self._center()
@@ -38,7 +35,12 @@ class LoginWindow(tk.Tk):
         tk.Button(btn_frame, text="Register", width=10, command=self._do_register).pack(side="left", padx=6)
 
     def _login(self):
-        ok, msg, user = self._auth.login(self._username.get(), self._password.get())
+        try:
+            ok, msg, user = self._auth.login(self._username.get(), self._password.get())
+        except Exception as exc:
+            messagebox.showerror("Database Error", str(exc), parent=self)
+            return
+
         if ok:
             self.destroy()
             self._on_login_success(user)
@@ -46,7 +48,12 @@ class LoginWindow(tk.Tk):
             messagebox.showerror("Login Failed", msg, parent=self)
 
     def _do_register(self):
-        ok, msg = self._auth.register(self._username.get(), self._password.get())
+        try:
+            ok, msg = self._auth.register(self._username.get(), self._password.get())
+        except Exception as exc:
+            messagebox.showerror("Database Error", str(exc), parent=self)
+            return
+
         if ok:
             messagebox.showinfo("Registered", msg + " You can now log in.", parent=self)
         else:

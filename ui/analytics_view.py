@@ -69,7 +69,7 @@ def build_analytics(parent, user):
 
         try:
             if mode == "Category":
-                summary = category_summary(user.data_path, type_var.get(),
+                summary = category_summary(user, type_var.get(),
                                            year_var.get(), month_var.get())
                 if summary is None or summary.empty:
                     messagebox.showinfo("No Data", "No transactions match the selected filters.")

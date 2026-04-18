@@ -1,66 +1,20 @@
 # Description:
-# This file provides functions to save and load transaction data using CSV files.
-# It keeps user transaction data persistent between application sessions.
+# This file provides functions to save and load transaction data using MySQL.
+# The function names are kept stable so the UI layer can keep calling them.
 
-import csv
+from core.database import fetch_transactions, replace_transactions
+from core.transaction import Transaction
 
-from core.transaction import Expense, Income
 
-
-def save_transactions(file_path, transactions):
+def save_transactions(user_ref, transactions):
     """
-    Save a list of transactions to a CSV file.
+    Save one user's transactions to MySQL.
     """
-    file_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(file_path, mode="w", newline="", encoding="utf-8") as file:
-        writer = csv.writer(file)
-        writer.writerow(["id", "amount", "date", "category", "type"])
-        for transaction in transactions:
-            writer.writerow(
-                [
-                    transaction.transaction_id,
-                    transaction.amount,
-                    transaction.date,
-                    transaction.category,
-                    transaction.get_type(),
-                ]
-            )
+    replace_transactions(user_ref, transactions)
 
 
-def load_transactions(file_path):
+def load_transactions(user_ref):
     """
-    Load transactions from a CSV file and recreate transaction objects.
+    Load one user's transactions from MySQL and recreate transaction objects.
     """
-    transactions = []
-
-    try:
-        with open(file_path, mode="r", encoding="utf-8") as file:
-            reader = csv.DictReader(file)
-            next_generated_id = 1
-
-            for row in reader:
-                transaction_id_raw = row.get("id", "").strip()
-                if transaction_id_raw:
-                    transaction_id = int(transaction_id_raw)
-                    next_generated_id = max(next_generated_id, transaction_id + 1)
-                else:
-                    transaction_id = next_generated_id
-                    next_generated_id += 1
-
-                amount = float(row["amount"])
-                date = row["date"]
-                category = row["category"]
-                transaction_type = row["type"]
-
-                if transaction_type == "Expense":
-                    transaction = Expense(transaction_id, amount, date, category)
-                elif transaction_type == "Income":
-                    transaction = Income(transaction_id, amount, date, category)
-                else:
-                    continue
-
-                transactions.append(transaction)
-    except FileNotFoundError:
-        return []
-
-    return transactions
+    return [Transaction.from_dict(row) for row in fetch_transactions(user_ref)]

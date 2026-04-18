@@ -3,6 +3,7 @@ pandas
 matplotlib
 python-dotenv
 google-generativeai
+mysql-connector-python
 
 # Test dependencies
 pytest

@@ -4,22 +4,23 @@
 
 import pandas as pd
 
+from core.file_handler import load_transactions
 
-def load_data(file_path):
+
+def load_data(user_ref):
     """
-    Load one transaction CSV file into a DataFrame.
+    Load one user's transactions into a DataFrame.
     """
-    try:
-        return pd.read_csv(file_path)
-    except FileNotFoundError:
-        return pd.DataFrame()
+    transactions = load_transactions(user_ref)
+    rows = [transaction.to_dict() for transaction in transactions]
+    return pd.DataFrame(rows)
 
 
-def filter_data(file_path, transaction_type=None, year=None, month=None, day=None):
+def filter_data(user_ref, transaction_type=None, year=None, month=None, day=None):
     """
     Load transaction data and apply optional type/date filters.
     """
-    df = load_data(file_path)
+    df = load_data(user_ref)
     if df.empty:
         return df
 
@@ -40,11 +41,11 @@ def filter_data(file_path, transaction_type=None, year=None, month=None, day=Non
     return df
 
 
-def category_summary(file_path, transaction_type=None, year=None, month=None, day=None):
+def category_summary(user_ref, transaction_type=None, year=None, month=None, day=None):
     """
     Return grouped category totals for the current filter selection.
     """
-    df = filter_data(file_path, transaction_type, year, month, day)
+    df = filter_data(user_ref, transaction_type, year, month, day)
     if df.empty:
         return None
     return df.groupby("category")["amount"].sum()

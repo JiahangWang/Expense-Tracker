@@ -1,6 +1,8 @@
-# Description:
-# This file defines the User model used by the authentication layer.
-# It stores hashed credential data and exposes the user's personal data path.
+"""
+Author: Jiahang
+Date: 2026-04-12
+Description: User model used by authentication and transaction-loading code paths.
+"""
 
 import os
 from pathlib import Path

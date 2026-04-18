@@ -1,11 +1,22 @@
+"""
+Author: Perfect
+Date: 2026-04-15
+Description: Login and registration window shown before the main app opens.
+"""
+
 import tkinter as tk
 from tkinter import messagebox
 
 from auth.auth_manager import AuthManager
+
+
 class LoginWindow(tk.Tk):
+    """Collect credentials and route the user into the authenticated application."""
+
     def __init__(self, on_login_success):
+        """Create the login window and remember the callback for successful authentication."""
         super().__init__()
-        self.title("Expense Tracker — Login")
+        self.title("Expense Tracker - Login")
         self.resizable(False, False)
         self._auth = AuthManager()
         self._on_login_success = on_login_success
@@ -13,11 +24,15 @@ class LoginWindow(tk.Tk):
         self._center()
 
     def _build(self):
+        """Build the username/password form and the login/register actions."""
         frame = tk.Frame(self, padx=30, pady=30)
         frame.pack()
 
         tk.Label(frame, text="Expense Tracker", font=("Helvetica", 16, "bold")).grid(
-            row=0, column=0, columnspan=2, pady=(0, 20)
+            row=0,
+            column=0,
+            columnspan=2,
+            pady=(0, 20),
         )
 
         tk.Label(frame, text="Username").grid(row=1, column=0, sticky="w")
@@ -35,6 +50,7 @@ class LoginWindow(tk.Tk):
         tk.Button(btn_frame, text="Register", width=10, command=self._do_register).pack(side="left", padx=6)
 
     def _login(self):
+        """Authenticate the entered credentials and open the main window on success."""
         try:
             ok, msg, user = self._auth.login(self._username.get(), self._password.get())
         except Exception as exc:
@@ -48,6 +64,7 @@ class LoginWindow(tk.Tk):
             messagebox.showerror("Login Failed", msg, parent=self)
 
     def _do_register(self):
+        """Create a new account from the values currently entered in the form."""
         try:
             ok, msg = self._auth.register(self._username.get(), self._password.get())
         except Exception as exc:
@@ -60,8 +77,9 @@ class LoginWindow(tk.Tk):
             messagebox.showerror("Registration Failed", msg, parent=self)
 
     def _center(self):
+        """Center the login window on screen."""
         self.update_idletasks()
-        w, h = self.winfo_width(), self.winfo_height()
-        x = (self.winfo_screenwidth() - w) // 2
-        y = (self.winfo_screenheight() - h) // 2
-        self.geometry(f"+{x}+{y}")
+        width, height = self.winfo_width(), self.winfo_height()
+        x_pos = (self.winfo_screenwidth() - width) // 2
+        y_pos = (self.winfo_screenheight() - height) // 2
+        self.geometry(f"+{x_pos}+{y_pos}")

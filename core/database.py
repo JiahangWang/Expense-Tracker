@@ -1,3 +1,9 @@
+"""
+Author: Jiahang
+Date: 2026-04-17
+Description: MySQL persistence layer for users, transactions, and backup-user seeding.
+"""
+
 import csv
 import json
 import os
@@ -17,6 +23,7 @@ _INITIALIZED = False
 
 
 def _server_config(include_database: bool) -> dict:
+    """Build the connector configuration, optionally including the target database name."""
     config = {
         "host": os.getenv("DB_HOST", "127.0.0.1"),
         "port": int(os.getenv("DB_PORT", "3306")),
@@ -29,10 +36,12 @@ def _server_config(include_database: bool) -> dict:
 
 
 def _connect(include_database: bool = True):
+    """Open one MySQL connection using environment-driven configuration."""
     return mysql.connector.connect(**_server_config(include_database))
 
 
 def ensure_database_ready() -> None:
+    """Create the database objects once per process and seed backup users when needed."""
     global _INITIALIZED
     if _INITIALIZED:
         return
@@ -44,6 +53,7 @@ def ensure_database_ready() -> None:
 
 
 def _create_database() -> None:
+    """Create the configured MySQL database if it does not already exist."""
     database_name = os.getenv("DB_NAME", "expense_tracker")
     with closing(_connect(include_database=False)) as connection:
         with closing(connection.cursor()) as cursor:
@@ -52,6 +62,7 @@ def _create_database() -> None:
 
 
 def _create_tables() -> None:
+    """Create the application tables used by authentication and transaction storage."""
     with closing(_connect()) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute(
@@ -87,6 +98,7 @@ def _create_tables() -> None:
 
 
 def _seed_backup_users_if_needed() -> None:
+    """Import backup users and their CSV transactions only when the database is empty."""
     with closing(_connect()) as connection:
         with closing(connection.cursor(dictionary=True)) as cursor:
             cursor.execute("SELECT COUNT(*) AS user_count FROM users")
@@ -125,6 +137,7 @@ def _seed_backup_users_if_needed() -> None:
 
 
 def _load_backup_users() -> dict[str, dict[str, str]]:
+    """Read normalized user credential records from the backup JSON file."""
     if not BACKUP_USERS_FILE.exists():
         return {}
 
@@ -142,6 +155,7 @@ def _load_backup_users() -> dict[str, dict[str, str]]:
 
 
 def _load_legacy_transactions(csv_path: Path) -> list[Transaction]:
+    """Load transaction rows from one backup CSV file into Transaction objects."""
     transactions = []
     with csv_path.open("r", encoding="utf-8") as handle:
         reader = csv.DictReader(handle)
@@ -171,6 +185,7 @@ def _load_legacy_transactions(csv_path: Path) -> list[Transaction]:
 
 
 def _normalize_username(user_ref) -> str:
+    """Convert a user object, username, or legacy file path into a normalized username."""
     if hasattr(user_ref, "username"):
         return str(user_ref.username).strip().lower()
 
@@ -186,11 +201,13 @@ def _normalize_username(user_ref) -> str:
 
 
 def fetch_user(username: str) -> dict | None:
+    """Return one user record from MySQL and trigger initialization if required."""
     ensure_database_ready()
     return _fetch_user_no_init(username)
 
 
 def _fetch_user_no_init(username: str) -> dict | None:
+    """Return one user record without running initialization again."""
     with closing(_connect()) as connection:
         with closing(connection.cursor(dictionary=True)) as cursor:
             cursor.execute(
@@ -205,6 +222,7 @@ def _fetch_user_no_init(username: str) -> dict | None:
 
 
 def create_user(username: str, password_hash: str, salt: str) -> int:
+    """Insert one user record and return its generated MySQL identifier."""
     ensure_database_ready()
     normalized_username = username.strip().lower()
 
@@ -222,6 +240,7 @@ def create_user(username: str, password_hash: str, salt: str) -> int:
 
 
 def delete_user(username: str) -> bool:
+    """Delete one user by username and report whether a row was removed."""
     ensure_database_ready()
     with closing(_connect()) as connection:
         with closing(connection.cursor()) as cursor:
@@ -234,6 +253,7 @@ def delete_user(username: str) -> bool:
 
 
 def list_usernames() -> list[str]:
+    """Return all stored usernames in sorted order."""
     ensure_database_ready()
     with closing(_connect()) as connection:
         with closing(connection.cursor()) as cursor:
@@ -242,6 +262,7 @@ def list_usernames() -> list[str]:
 
 
 def count_users() -> int:
+    """Return the number of users currently stored in MySQL."""
     ensure_database_ready()
     with closing(_connect()) as connection:
         with closing(connection.cursor()) as cursor:
@@ -251,6 +272,7 @@ def count_users() -> int:
 
 
 def fetch_transactions(user_ref) -> list[dict]:
+    """Load one user's transactions from MySQL in dictionary form."""
     ensure_database_ready()
     username = _normalize_username(user_ref)
 
@@ -275,6 +297,7 @@ def fetch_transactions(user_ref) -> list[dict]:
 
 
 def replace_transactions(user_ref, transactions: list[Transaction]) -> None:
+    """Replace all stored transactions for one user with the supplied transaction list."""
     ensure_database_ready()
     username = _normalize_username(user_ref)
     user = fetch_user(username)
@@ -285,6 +308,7 @@ def replace_transactions(user_ref, transactions: list[Transaction]) -> None:
 
 
 def _replace_transactions_for_user_id(user_id: int, transactions: list[Transaction]) -> None:
+    """Replace all stored transactions for one numeric user identifier."""
     with closing(_connect()) as connection:
         with closing(connection.cursor()) as cursor:
             cursor.execute("DELETE FROM transactions WHERE user_id = %s", (user_id,))
@@ -314,6 +338,7 @@ def _replace_transactions_for_user_id(user_id: int, transactions: list[Transacti
 
 
 def check_connection() -> tuple[bool, str]:
+    """Return a success flag and message describing whether MySQL initialization worked."""
     try:
         ensure_database_ready()
     except Error as exc:

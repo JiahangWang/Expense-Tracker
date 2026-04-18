@@ -1,6 +1,8 @@
-# Description:
-# This file provides analytics helpers for the Expense Tracker using pandas.
-# It supports filtered summaries and yearly/monthly cashflow calculations.
+"""
+Author: Perfect
+Date: 2026-04-14
+Description: Analytics helpers for filtering transaction data and computing summaries.
+"""
 
 import pandas as pd
 

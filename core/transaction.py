@@ -1,6 +1,8 @@
-# Description:
-# This file defines the Transaction class and its income/expense subclasses.
-# The derived classes provide transaction type labels and signed amount logic.
+"""
+Author: Jiahang
+Date: 2026-04-11
+Description: Transaction model classes for shared, income, and expense-specific behavior.
+"""
 
 class Transaction:
     def __init__(self, transaction_id: int, amount: float, date: str, category: str):

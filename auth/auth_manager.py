@@ -1,7 +1,8 @@
-# Description:
-# This file implements the authentication manager for the Expense Tracker.
-# It supports registration, login, default-user setup, and account deletion
-# using MySQL storage for user accounts.
+"""
+Author: Jiahang
+Date: 2026-04-12
+Description: Authentication manager for registration, login, and user-account operations.
+"""
 
 import hashlib
 import secrets

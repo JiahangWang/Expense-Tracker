@@ -1,3 +1,9 @@
+"""
+Author: Perfect
+Date: 2026-04-18
+Description: Unit tests for transaction validation, filtering, and formatting helpers.
+"""
+
 import pytest
 
 from core.transaction import Expense, Income

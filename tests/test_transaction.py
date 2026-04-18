@@ -1,3 +1,9 @@
+"""
+Author: Jiahang
+Date: 2026-04-18
+Description: Unit tests for transaction serialization and subtype behavior.
+"""
+
 from core.transaction import Expense, Income, Transaction
 
 
@@ -40,4 +46,3 @@ class TestTransaction:
 
         assert type(transaction) is Transaction
         assert transaction.get_type() == "Transaction"
-

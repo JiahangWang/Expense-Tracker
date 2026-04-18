@@ -1,6 +1,8 @@
-# Description:
-# This file provides functions to save and load transaction data using MySQL.
-# The function names are kept stable so the UI layer can keep calling them.
+"""
+Author: Jiahang
+Date: 2026-04-13
+Description: Compatibility wrapper that keeps transaction load/save calls stable over MySQL storage.
+"""
 
 from core.database import fetch_transactions, replace_transactions
 from core.transaction import Transaction

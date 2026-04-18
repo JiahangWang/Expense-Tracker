@@ -1,3 +1,9 @@
+"""
+Author: Perfect
+Date: 2026-04-18
+Description: Unit tests for analytics helpers and cashflow summary calculations.
+"""
+
 import pandas as pd
 
 from core.analytics import (

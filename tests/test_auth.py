@@ -1,15 +1,25 @@
+"""
+Author: Jiahang
+Date: 2026-04-18
+Description: Unit tests for authentication behavior using an in-memory fake database.
+"""
+
 from auth.auth_manager import AuthManager
 
 
 class FakeDatabase:
+    """Small in-memory stand-in for the auth-facing database helper functions."""
+
     def __init__(self):
         self.users = {}
         self.next_user_id = 1
 
     def fetch_user(self, username):
+        """Return one stored user record by its normalized username."""
         return self.users.get(username.strip().lower())
 
     def create_user(self, username, password_hash, salt):
+        """Insert one fake user record and return its generated identifier."""
         normalized = username.strip().lower()
         user_id = self.next_user_id
         self.next_user_id += 1
@@ -22,17 +32,21 @@ class FakeDatabase:
         return user_id
 
     def delete_user(self, username):
+        """Delete one fake user record if it exists."""
         normalized = username.strip().lower()
         return self.users.pop(normalized, None) is not None
 
     def list_usernames(self):
+        """Return all fake usernames in sorted order."""
         return sorted(self.users.keys())
 
     def count_users(self):
+        """Return the number of stored fake users."""
         return len(self.users)
 
 
 def build_auth(monkeypatch):
+    """Patch AuthManager dependencies so auth tests run without a real database."""
     fake_db = FakeDatabase()
     monkeypatch.setattr("auth.auth_manager.fetch_user", fake_db.fetch_user)
     monkeypatch.setattr("auth.auth_manager.create_user", fake_db.create_user)

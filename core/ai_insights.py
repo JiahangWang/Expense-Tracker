@@ -1,3 +1,9 @@
+"""
+Author: Jiahang
+Date: 2026-04-17
+Description: AI insight helper that summarizes transaction data through the Gemini API.
+"""
+
 import os
 
 from dotenv import load_dotenv
@@ -7,6 +13,7 @@ load_dotenv()
 
 
 def get_insights(transactions):
+    """Generate a short natural-language summary of the provided transaction history."""
     api_key = os.getenv("GEMINI_API_KEY")
     model_name = os.getenv("GEMINI_MODEL", "gemini-2.5-flash")
 
@@ -23,6 +30,7 @@ def get_insights(transactions):
     total_expense = sum(t.amount for t in transactions if t.get_type() == "Expense")
     balance = total_income - total_expense
 
+    # Group totals by transaction type and category before prompting the model.
     category_totals = {}
     for t in transactions:
         key = f"{t.get_type()} - {t.category}"

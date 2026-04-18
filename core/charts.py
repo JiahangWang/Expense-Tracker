@@ -1,6 +1,8 @@
-# Description:
-# This file provides helper functions to build matplotlib figures for the GUI.
-# It includes category and cashflow trend charts for the Expense Tracker.
+"""
+Author: Perfect
+Date: 2026-04-14
+Description: Matplotlib chart builders used by the analytics page in the GUI.
+"""
 
 from matplotlib.figure import Figure
 

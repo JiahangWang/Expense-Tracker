@@ -1,3 +1,9 @@
+"""
+Author: Perfect
+Date: 2026-04-18
+Description: Unit tests for the in-memory tracker collection and balance logic.
+"""
+
 from core.tracker import ExpenseTracker
 from core.transaction import Expense, Income
 
@@ -43,4 +49,3 @@ class TestExpenseTracker:
         tracker = ExpenseTracker()
 
         assert tracker.delete_transaction_by_id(123) is False
-

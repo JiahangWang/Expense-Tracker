@@ -1,6 +1,8 @@
-# Description:
-# This file defines the ExpenseTracker class, which manages a collection of
-# transactions and provides balance, lookup, and delete operations.
+"""
+Author: Perfect
+Date: 2026-04-11
+Description: In-memory tracker that manages transaction objects and derived balance operations.
+"""
 
 class ExpenseTracker:
     def __init__(self):

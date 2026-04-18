@@ -1,7 +1,8 @@
-# Description:
-# This file contains shared validation and formatting helpers for transactions.
-# It keeps transaction-input and transaction-display logic separate from the
-# Tkinter layer.
+"""
+Author: Perfect
+Date: 2026-04-13
+Description: Validation, period-filtering, and formatting helpers for transaction workflows.
+"""
 
 from datetime import datetime
 

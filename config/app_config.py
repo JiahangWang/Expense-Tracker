@@ -1,11 +1,13 @@
-# Description:
-# This file stores shared configuration values for the Expense Tracker.
-# It defines project paths and fixed category/type options
-# used throughout the application.
+"""
+Author: Jiahang
+Date: 2026-04-11
+Description: Shared configuration values for project paths and transaction category options.
+"""
 
 from pathlib import Path
 
 
+# Resolve project-level paths once so every module can import the same locations.
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 USERS_FILE = DATA_DIR / "users.json"

@@ -11,7 +11,7 @@ It provides a Tkinter GUI, stores users and transactions in MySQL, and supports 
 - Track ID, amount, date, and category
 - Delete a transaction by ID
 - Show current balance
-- Show transaction records filtered by Type + Year + Month + optional Day
+- Show transaction records in a tabular view
 - Show category summary filtered by Type + Year + Month
 - Show category visuals with:
   - Category bar chart

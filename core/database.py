@@ -8,7 +8,7 @@ import mysql.connector
 from dotenv import load_dotenv
 from mysql.connector import Error
 
-from config.app_config import DATA_DIR, USERS_FILE
+from config.app_config import BACKUP_USERS_FILE, DATA_BACKUP_DIR
 from core.transaction import Transaction
 
 load_dotenv()
@@ -39,7 +39,7 @@ def ensure_database_ready() -> None:
 
     _create_database()
     _create_tables()
-    _bootstrap_legacy_data()
+    _seed_backup_users_if_needed()
     _INITIALIZED = True
 
 
@@ -86,7 +86,7 @@ def _create_tables() -> None:
         connection.commit()
 
 
-def _bootstrap_legacy_data() -> None:
+def _seed_backup_users_if_needed() -> None:
     with closing(_connect()) as connection:
         with closing(connection.cursor(dictionary=True)) as cursor:
             cursor.execute("SELECT COUNT(*) AS user_count FROM users")
@@ -94,12 +94,12 @@ def _bootstrap_legacy_data() -> None:
             if row and row["user_count"] > 0:
                 return
 
-        legacy_users = _load_legacy_users()
-        if not legacy_users:
+        backup_users = _load_backup_users()
+        if not backup_users:
             return
 
         with closing(connection.cursor()) as cursor:
-            for username, credentials in legacy_users.items():
+            for username, credentials in backup_users.items():
                 cursor.execute(
                     """
                     INSERT INTO users (username, password_hash, salt)
@@ -111,25 +111,24 @@ def _bootstrap_legacy_data() -> None:
                         credentials["salt"],
                     ),
                 )
-
             connection.commit()
 
-        for username in legacy_users:
-            legacy_csv = DATA_DIR / username / "data.csv"
-            if legacy_csv.exists():
+        for username in backup_users:
+            backup_csv = DATA_BACKUP_DIR / username / "data.csv"
+            if backup_csv.exists():
                 user = _fetch_user_no_init(username)
                 if user is not None:
                     _replace_transactions_for_user_id(
                         int(user["id"]),
-                        _load_legacy_transactions(legacy_csv),
+                        _load_legacy_transactions(backup_csv),
                     )
 
 
-def _load_legacy_users() -> dict[str, dict]:
-    if not USERS_FILE.exists():
+def _load_backup_users() -> dict[str, dict[str, str]]:
+    if not BACKUP_USERS_FILE.exists():
         return {}
 
-    with USERS_FILE.open("r", encoding="utf-8") as handle:
+    with BACKUP_USERS_FILE.open("r", encoding="utf-8") as handle:
         data = json.load(handle)
 
     return {
@@ -138,6 +137,7 @@ def _load_legacy_users() -> dict[str, dict]:
             "salt": str(values["salt"]),
         }
         for username, values in data.items()
+        if isinstance(values, dict) and "password_hash" in values and "salt" in values
     }
 
 

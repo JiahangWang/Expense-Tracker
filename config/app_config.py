@@ -9,6 +9,8 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 DATA_DIR = BASE_DIR / "data"
 USERS_FILE = DATA_DIR / "users.json"
+DATA_BACKUP_DIR = BASE_DIR / "data_backup"
+BACKUP_USERS_FILE = DATA_BACKUP_DIR / "users.json"
 
 INCOME_CATEGORIES = (
     "salary",

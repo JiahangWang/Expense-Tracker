@@ -20,7 +20,7 @@ It provides a Tkinter GUI, stores users and transactions in MySQL, and supports 
   - Year Trend across all available years
   - Month Trend for one selected year
 - Generate AI insights from transaction history
-- Automatically import legacy `data/users.json` and per-user CSV files into MySQL when the database is empty
+- Automatically seed all backup users from `data_backup` when the database is empty
 
 ## Tech Stack
 - Python 3.x

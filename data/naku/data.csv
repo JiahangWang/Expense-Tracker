@@ -2,3 +2,4 @@ id,amount,date,category,type
 1,100.0,2026-04-16,salary,Income
 2,10.0,2026-04-16,shopping,Expense
 3,200.0,2026-04-16,freelance,Income
+4,20.0,2026-04-17,food,Expense

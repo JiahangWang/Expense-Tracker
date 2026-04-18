@@ -25,15 +25,31 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 - tkinter (GUI)
 - pandas (data analysis)
 - matplotlib (charts)
+- python-dotenv (load environment variables from `.env`)
+- google-generativeai (AI insights)
 - CSV file storage
-
-
 
 ## Requirements
 Install dependencies:
 
 ```bash
-pip install pandas matplotlib
+pip install pandas matplotlib python-dotenv google-generativeai
+```
+
+If you want to run tests as well:
+
+```bash
+pip install pytest
+```
+
+Notes:
+- `tkinter` is part of the Python standard library in many distributions, but some systems may require installing Tk separately.
+- The AI insights feature requires a Gemini API key.
+
+Create a `.env` file in the project root:
+
+```env
+GEMINI_API_KEY=your_api_key_here
 ```
 
 ## How to Run
@@ -42,6 +58,8 @@ From the project directory:
 ```bash
 python main.py
 ```
+
+If `python` points to a different interpreter on your machine, use the interpreter from your active environment instead.
 
 ## CSV Format
 `data/data.csv` uses this format:

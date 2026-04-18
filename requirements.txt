@@ -1,0 +1,8 @@
+# Runtime dependencies
+pandas
+matplotlib
+python-dotenv
+google-generativeai
+
+# Test dependencies
+pytest

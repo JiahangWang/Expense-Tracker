@@ -33,13 +33,7 @@ It provides a Tkinter GUI, stores data in CSV, and supports category-based summa
 Install dependencies:
 
 ```bash
-pip install pandas matplotlib python-dotenv google-generativeai
-```
-
-If you want to run tests as well:
-
-```bash
-pip install pytest
+pip install -r requirements.txt
 ```
 
 Notes:

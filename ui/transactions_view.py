@@ -12,7 +12,7 @@ from config.app_config import EXPENSE_CATEGORIES, INCOME_CATEGORIES, TRANSACTION
 from core.file_handler import load_transactions, save_transactions
 from core.tracker import ExpenseTracker
 from core.transaction import Expense, Income
-from core.transaction_helper import validate_transaction_input
+from core.transaction_helper import matches_period, validate_transaction_input
 
 
 def build_transactions(parent, user):
@@ -52,6 +52,38 @@ def build_transactions(parent, user):
         command=lambda: _delete_selected(tracker, user, tree),
     ).pack(side="right", padx=(0, 8))
 
+    filters = tk.Frame(frame, bg="#f1f5f9")
+    filters.pack(fill="x", padx=30, pady=(0, 10))
+
+    year_var = tk.StringVar(value="All")
+    month_var = tk.StringVar(value="All")
+    day_var = tk.StringVar(value="All")
+
+    tk.Label(filters, text="Year", bg="#f1f5f9", fg="#334155", font=("Helvetica", 10)).pack(side="left")
+    year_menu = ttk.Combobox(filters, textvariable=year_var, state="readonly", width=8)
+    year_menu.pack(side="left", padx=(6, 12))
+
+    tk.Label(filters, text="Month", bg="#f1f5f9", fg="#334155", font=("Helvetica", 10)).pack(side="left")
+    month_menu = ttk.Combobox(filters, textvariable=month_var, state="readonly", width=8)
+    month_menu.pack(side="left", padx=(6, 12))
+
+    tk.Label(filters, text="Day", bg="#f1f5f9", fg="#334155", font=("Helvetica", 10)).pack(side="left")
+    day_menu = ttk.Combobox(filters, textvariable=day_var, state="readonly", width=8)
+    day_menu.pack(side="left", padx=(6, 12))
+
+    tk.Button(
+        filters,
+        text="Clear Filter",
+        font=("Helvetica", 10),
+        bg="#e2e8f0",
+        fg="#1e293b",
+        relief="flat",
+        padx=10,
+        pady=4,
+        cursor="hand2",
+        command=lambda: _reset_filters(year_var, month_var, day_var, tracker, tree),
+    ).pack(side="left")
+
     cols = ("ID", "Date", "Category", "Amount", "Type")
     tree = ttk.Treeview(frame, columns=cols, show="headings", selectmode="browse")
     for col in cols:
@@ -67,14 +99,25 @@ def build_transactions(parent, user):
     tree.pack(side="left", fill="both", expand=True, padx=(30, 0), pady=(0, 20))
     scrollbar.pack(side="left", fill="y", pady=(0, 20))
 
-    _refresh(tree, tracker)
+    def refresh_view():
+        """Reload filter options and redraw the table using the current filter state."""
+        _update_filter_options(tracker, year_var, month_var, day_var, year_menu, month_menu, day_menu)
+        _refresh(tree, tracker, year_var.get(), month_var.get(), day_var.get())
+
+    for variable in (year_var, month_var, day_var):
+        variable.trace_add("write", lambda *_: _refresh(tree, tracker, year_var.get(), month_var.get(), day_var.get()))
+
+    refresh_view()
+    frame.refresh = refresh_view
     return frame
 
 
-def _refresh(tree, tracker):
+def _refresh(tree, tracker, selected_year="All", selected_month="All", selected_day="All"):
     """Redraw the transaction table using the tracker's current in-memory state."""
     tree.delete(*tree.get_children())
     for transaction in sorted(tracker.get_all_transactions(), key=lambda item: item.date, reverse=True):
+        if not matches_period(transaction.date, selected_year, selected_month, selected_day):
+            continue
         tag = "income" if transaction.get_type() == "Income" else "expense"
         tree.insert(
             "",
@@ -93,6 +136,34 @@ def _refresh(tree, tracker):
     tree.tag_configure("expense", foreground="#dc2626")
 
 
+def _update_filter_options(tracker, year_var, month_var, day_var, year_menu, month_menu, day_menu):
+    """Refresh the available year, month, and day filter values from the current transactions."""
+    transactions = tracker.get_all_transactions()
+
+    years = ["All"] + sorted({transaction.date[:4] for transaction in transactions}, reverse=True)
+    months = ["All"] + [f"{month:02d}" for month in range(1, 13)]
+    days = ["All"] + [f"{day:02d}" for day in range(1, 32)]
+
+    year_menu["values"] = years
+    month_menu["values"] = months
+    day_menu["values"] = days
+
+    if year_var.get() not in years:
+        year_var.set("All")
+    if month_var.get() not in months:
+        month_var.set("All")
+    if day_var.get() not in days:
+        day_var.set("All")
+
+
+def _reset_filters(year_var, month_var, day_var, tracker, tree):
+    """Clear all date filters and redraw the full transaction list."""
+    year_var.set("All")
+    month_var.set("All")
+    day_var.set("All")
+    _refresh(tree, tracker)
+
+
 def _delete_selected(tracker, user, tree):
     """Delete the selected transaction from memory and persistent storage."""
     selected = tree.selection()
@@ -103,7 +174,10 @@ def _delete_selected(tracker, user, tree):
     transaction_id = int(selected[0])
     tracker.delete_transaction_by_id(transaction_id)
     save_transactions(user.data_file, tracker.get_all_transactions())
-    _refresh(tree, tracker)
+    if hasattr(tree.master, "refresh"):
+        tree.master.refresh()
+    else:
+        _refresh(tree, tracker)
 
 
 def _open_add_dialog(parent, tracker, user, tree):
@@ -168,7 +242,10 @@ def _open_add_dialog(parent, tracker, user, tree):
         )
         tracker.add_transaction(transaction)
         save_transactions(user.data_file, tracker.get_all_transactions())
-        _refresh(tree, tracker)
+        if hasattr(tree.master, "refresh"):
+            tree.master.refresh()
+        else:
+            _refresh(tree, tracker)
         dialog.destroy()
 
     tk.Button(

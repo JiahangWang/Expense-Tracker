@@ -72,9 +72,26 @@ class AppWindow(tk.Tk):
             btn.pack(fill="x", pady=2)
             self._nav_buttons[name] = btn
 
-        # Keep sign-out available from every page through a persistent sidebar action.
+        actions = tk.Frame(sidebar, bg="#1e293b")
+        actions.pack(side="bottom", fill="x", pady=16)
+
         tk.Button(
-            sidebar,
+            actions,
+            text="Log out",
+            anchor="w",
+            padx=16,
+            bg="#1e293b",
+            fg="#fbbf24",
+            activebackground="#334155",
+            activeforeground="white",
+            relief="flat",
+            font=("Helvetica", 10, "bold"),
+            cursor="hand2",
+            command=self._logout,
+        ).pack(fill="x")
+
+        tk.Button(
+            actions,
             text="Quit",
             anchor="w",
             padx=16,
@@ -85,8 +102,8 @@ class AppWindow(tk.Tk):
             relief="flat",
             font=("Helvetica", 10, "bold"),
             cursor="hand2",
-            command=self._logout,
-        ).pack(side="bottom", fill="x", pady=16)
+            command=self._quit_app,
+        ).pack(fill="x", pady=(6, 0))
 
         # The content frame is reused while individual child pages are swapped in and out.
         self._content = tk.Frame(self, bg="#f1f5f9")
@@ -126,12 +143,19 @@ class AppWindow(tk.Tk):
 
     def _logout(self):
         """Close the authenticated window and return the user to the login screen."""
-        if not messagebox.askyesno("Quit", "Sign out of the current account?", parent=self):
+        if not messagebox.askyesno("Log out", "Sign out of the current account?", parent=self):
             return
 
         self.destroy()
         if self._on_logout:
             self._on_logout()
+
+    def _quit_app(self):
+        """Close the entire application window."""
+        if not messagebox.askyesno("Quit", "Close Expense Tracker?", parent=self):
+            return
+
+        self.destroy()
 
     def _center(self):
         """Center the window on the current screen."""

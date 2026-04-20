@@ -10,8 +10,12 @@ from ui.app_window import AppWindow
 
 def main():
     """Launch the login flow and open the authenticated application after success."""
+    def open_login():
+        """Create the authentication window."""
+        LoginWindow(on_login_success=on_login).mainloop()
+
     def on_login(user):
         """Create the main application window for the authenticated user."""
-        AppWindow(user).mainloop()
+        AppWindow(user, on_logout=open_login).mainloop()
 
-    LoginWindow(on_login_success=on_login).mainloop()
+    open_login()

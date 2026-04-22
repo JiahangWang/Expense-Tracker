@@ -1,5 +1,5 @@
 """
-Author: Jiahang
+Author: Perfect
 Date: 2026-04-17
 Description: AI insight helper that summarizes transaction data through the Gemini API.
 """
